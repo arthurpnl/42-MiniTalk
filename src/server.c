@@ -27,7 +27,7 @@ void	display_banner(int pid)
 {
 	ft_printf("\n\e[1;35m");
 	ft_printf("╔══════════════════════════════════════════════╗\n");
-	ft_printf("║              MINITALK SERVER                ║\n");
+	ft_printf("║              MINITALK SERVER                 ║\n");
 	ft_printf("╚══════════════════════════════════════════════╝\n");
 	ft_printf("\e[1;36mPID: \e[0;91m%d\033[0m\n", pid);
 	ft_printf("\e[1;33mWaiting for messages...\e[0m\n\n>>");
