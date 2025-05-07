@@ -12,18 +12,7 @@
 
 #include "../include/minitalk.h"
 
-/**
- * Display a single character to standard output
- */
-void	print_char(char c)
-{
-	write(1, &c, 1);
-}
-
-/**
- * Display server banner with PID information
- */
-void	display_banner(int pid)
+void    display_banner(int pid)
 {
 	ft_printf("\n\e[1;35m");
 	ft_printf("╔══════════════════════════════════════════════╗\n");
@@ -33,39 +22,40 @@ void	display_banner(int pid)
 	ft_printf("\e[1;33mWaiting for messages...\e[0m\n\n>>");
 }
 
-/**
- * Signal handler function
- * Reconstructs characters bit by bit from received signals
- */
-void	signal_handler(int signal, siginfo_t *info, void *context)
+void print_char(char c)
 {
-	static int	current_char;
-	static int	bit_index;
+	if (c >= 32 && c <= 126)
+		write(1, &c, 1);
+	else if (c == '\n')
+		write(1, &c, 1);
+}
+
+
+void    signal_handler(int signal, siginfo_t *info, void *context)
+{
+	static int  current_char = 0;
+	static int  bit_index = 0;
 
 	(void)context;
-	if (!info->si_pid)
-		exit(0);
+	(void)info;
+
 	if (signal == SIGUSR1)
 		current_char |= (1 << bit_index);
 	bit_index++;
 	if (bit_index == 8)
 	{
 		if (current_char == '\0')
-		{
 			ft_printf("\n");
-			kill(info->si_pid, SIGUSR1);
-		}
 		else
 			print_char(current_char);
-		bit_index = 0;
 		current_char = 0;
+		bit_index = 0;
 	}
-	kill(info->si_pid, SIGUSR1);
 }
 
-int	main(void)
+int main(void)
 {
-	struct sigaction	sa;
+	struct sigaction    sa;
 
 	display_banner(getpid());
 	sa.sa_sigaction = &signal_handler;

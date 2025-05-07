@@ -12,63 +12,23 @@
 
 #include "../include/minitalk.h"
 
-int	g_ack_received;
-
-/**
- * Set up signal action and check for errors
- */
-void	setup_signal_action(struct sigaction *sa, int signum)
+void    send_char(int pid, unsigned char character)
 {
-	int	result;
-
-	result = sigaction(signum, sa, NULL);
-	if (result == -1)
-	{
-		ft_printf("\033[1;31mError setting up signal handlers\033[0m\n");
-		exit(1);
-	}
-}
-
-/**
- * Handler for acknowledgment signals from server
- */
-void	ack_handler(int signum, siginfo_t *siginfo, void *context)
-{
-	(void)signum;
-	(void)context;
-	(void)siginfo;
-	g_ack_received = 1;
-}
-
-/**
- * Send a character bit by bit to the server
- */
-void	send_char(int pid, unsigned char character)
-{
-	int	i;
-
-	i = 0;
+	int i = 0;
 	while (i < 8)
 	{
-		if ((character & (1 << (i))) != 0)
+		if ((character & (1 << i)) != 0)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
 		i++;
-		while (!g_ack_received)
-			;
-		g_ack_received = 0;
+		usleep(300);
 	}
 }
 
-/**
- * Send the complete message to the server
- */
-void	send_message(pid_t server_pid, char *message)
+void    send_message(pid_t server_pid, char *message)
 {
-	int	i;
-
-	i = 0;
+	int i = 0;
 	ft_printf("\033[1;36mSending message to server...\033[0m\n");
 	while (message[i])
 	{
@@ -80,16 +40,11 @@ void	send_message(pid_t server_pid, char *message)
 	exit(0);
 }
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	struct sigaction	sa;
-	pid_t				server_pid;
-	char				*message;
+	pid_t   server_pid;
+	char    *message;
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = &ack_handler;
-	setup_signal_action(&sa, SIGUSR1);
 	if (argc != 3)
 	{
 		ft_printf("\033[1;31mError: Invalid format\033[0m\n");
