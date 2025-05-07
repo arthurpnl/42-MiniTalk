@@ -6,13 +6,13 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:02:34 by arpenel           #+#    #+#             */
-/*   Updated: 2025/05/07 00:02:37 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/05/07 11:35:29 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void    display_banner(int pid)
+void	display_banner(int pid)
 {
 	ft_printf("\n\e[1;35m");
 	ft_printf("╔══════════════════════════════════════════════╗\n");
@@ -22,7 +22,7 @@ void    display_banner(int pid)
 	ft_printf("\e[1;33mWaiting for messages...\e[0m\n\n>>");
 }
 
-void print_char(char c)
+void	print_char(char c)
 {
 	if (c >= 32 && c <= 126)
 		write(1, &c, 1);
@@ -30,15 +30,13 @@ void print_char(char c)
 		write(1, &c, 1);
 }
 
-
-void    signal_handler(int signal, siginfo_t *info, void *context)
+void	signal_handler(int signal, siginfo_t *info, void *context)
 {
-	static int  current_char = 0;
-	static int  bit_index = 0;
+	static int	current_char = 0;
+	static int	bit_index = 0;
 
 	(void)context;
 	(void)info;
-
 	if (signal == SIGUSR1)
 		current_char |= (1 << bit_index);
 	bit_index++;
@@ -53,9 +51,9 @@ void    signal_handler(int signal, siginfo_t *info, void *context)
 	}
 }
 
-int main(void)
+int	main(void)
 {
-	struct sigaction    sa;
+	struct sigaction	sa;
 
 	display_banner(getpid());
 	sa.sa_sigaction = &signal_handler;

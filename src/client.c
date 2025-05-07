@@ -6,15 +6,17 @@
 /*   By: arpenel <arpenel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:02:31 by arpenel           #+#    #+#             */
-/*   Updated: 2025/05/07 00:02:32 by arpenel          ###   ########.fr       */
+/*   Updated: 2025/05/07 11:35:58 by arpenel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void    send_char(int pid, unsigned char character)
+void	send_char(int pid, unsigned char character)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (i < 8)
 	{
 		if ((character & (1 << i)) != 0)
@@ -26,9 +28,11 @@ void    send_char(int pid, unsigned char character)
 	}
 }
 
-void    send_message(pid_t server_pid, char *message)
+void	send_message(pid_t server_pid, char *message)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	ft_printf("\033[1;36mSending message to server...\033[0m\n");
 	while (message[i])
 	{
@@ -40,10 +44,10 @@ void    send_message(pid_t server_pid, char *message)
 	exit(0);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	pid_t   server_pid;
-	char    *message;
+	pid_t	server_pid;
+	char	*message;
 
 	if (argc != 3)
 	{
